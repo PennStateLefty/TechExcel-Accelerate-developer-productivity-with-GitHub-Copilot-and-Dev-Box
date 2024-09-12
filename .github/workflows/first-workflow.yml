@@ -12,3 +12,12 @@ jobs:
 
     - name: Echo second string
       run: echo "Step 2 complete!"
+
+  cowsay_job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cowsay step
+      uses: binxio/cowsay-action@v1
+      with:
+        text: "Ready for prod–ship it!"
+        color: magenta
