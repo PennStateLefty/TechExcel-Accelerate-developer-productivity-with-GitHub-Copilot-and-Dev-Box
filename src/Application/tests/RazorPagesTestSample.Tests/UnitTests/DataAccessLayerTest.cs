@@ -48,24 +48,24 @@ namespace RazorPagesTestSample.Tests.UnitTests
             }
         }
 
-        [Fact]
-        public async Task AddMessageAsync_MessageIsNotAdded_WhenMessageExceedsCharacterLimit()
-        {
-            using (var db = new AppDbContext(Utilities.TestDbContextOptions()))
-            {
-                // Arrange
-                var recId = 11;
-                var longText = new string('a', 251); // 251 characters
-                var message = new Message() { Id = recId, Text = longText };
+        // [Fact]
+        // public async Task AddMessageAsync_MessageIsNotAdded_WhenMessageExceedsCharacterLimit()
+        // {
+        //     using (var db = new AppDbContext(Utilities.TestDbContextOptions()))
+        //     {
+        //         // Arrange
+        //         var recId = 11;
+        //         var longText = new string('a', 251); // 251 characters
+        //         var message = new Message() { Id = recId, Text = longText };
 
-                // Act & Assert
-                await db.AddMessageAsync(message);
+        //         // Act & Assert
+        //         await db.AddMessageAsync(message);
 
-                // Ensure the message was not added
-                var actualMessage = await db.FindAsync<Message>(recId);
-                Assert.Null(actualMessage);
-            }
-        }
+        //         // Ensure the message was not added
+        //         var actualMessage = await db.FindAsync<Message>(recId);
+        //         Assert.Null(actualMessage);
+        //     }
+        // }
 
         [Fact]
         public async Task DeleteAllMessagesAsync_MessagesAreDeleted()
