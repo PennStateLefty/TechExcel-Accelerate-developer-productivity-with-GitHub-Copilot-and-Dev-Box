@@ -9,6 +9,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env: 
+  registryName: "sllr2wa5ppkoompnpreg.azurecr.io"
+  repositoryName: "techexcel/dotnetcoreapp"
+  dockerFolderPath: "/src/Application/src/RazorPagesTestSample"
+  tag: ${{ github.run_number }}
+
 jobs:
   build:
 
@@ -33,3 +39,19 @@ jobs:
     - name: Test
       working-directory: ./src/Application/test/RazorPagesTestSample.Tests
       run: dotnet test --no-build --verbosity normal
+      
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Log in to container registry
+      run: docker login ${{ env.registryName }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+
+    - name: Build and tag Docker image
+      run: docker build -t ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }} --build-arg build_version=${{ env.tag }} ${{ env.dockerFolderPath }}
+
+    - name: Push Docker image
+      run: docker push ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
