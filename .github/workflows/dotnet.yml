@@ -37,7 +37,7 @@ jobs:
       run: dotnet build --no-restore
     
     - name: Test
-      working-directory: ./src/Application/test/RazorPagesTestSample.Tests
+      working-directory: ./src/Application/tests/RazorPagesTestSample.Tests
       run: dotnet test --no-build --verbosity normal
       
   publish:
