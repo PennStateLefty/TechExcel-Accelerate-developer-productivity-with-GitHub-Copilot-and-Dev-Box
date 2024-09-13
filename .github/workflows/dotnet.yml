@@ -60,6 +60,11 @@ jobs:
     - name: Push Docker image
       run: docker push ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
 
+  deploy_dev:
+    needs: publish
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
     - name: Login to Azure
       uses: azure/login@v1
       with:
@@ -72,4 +77,48 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'sllr2wa5ppkoo-dev'
+        images: "sllr2wa5ppkoompnpreg.azurecr.io/techexcel/dotnetcoreapp:${{ env.tag }}"
+
+  deploy_test:
+    needs: deploy_dev
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
+
+    - name: Deploy to the Azure Web App (Test)
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'sllr2wa5ppkoo-test'
+        images: "sllr2wa5ppkoompnpreg.azurecr.io/techexcel/dotnetcoreapp:${{ env.tag }}"
+
+  deploy_prod:
+    needs: deploy_test
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
+
+    - name: Deploy to the Azure Web App (Production)
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'sllr2wa5ppkoo-prod'
         images: "sllr2wa5ppkoompnpreg.azurecr.io/techexcel/dotnetcoreapp:${{ env.tag }}"
