@@ -15,6 +15,10 @@ env:
   dockerFolderPath: "./src/Application/src/RazorPagesTestSample"
   tag: ${{ github.run_number }}
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
 
