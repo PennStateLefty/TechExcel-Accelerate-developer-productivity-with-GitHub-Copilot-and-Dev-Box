@@ -43,9 +43,19 @@ namespace RazorPagesTestSample.Pages
                 return Page();
             }
 
-            await _db.AddMessageAsync(Message);
+            if (Message.Text.Length > 250)
+            {
+                ModelState.AddModelError("Message.Text", "The message must be less than 250 characters");
+                Messages = await _db.GetMessagesAsync();
 
-            return RedirectToPage();
+                return Page();
+            }
+            else
+            {
+                await _db.AddMessageAsync(Message);
+
+                return RedirectToPage();
+            }
         }
 
         public async Task<IActionResult> OnPostDeleteAllMessagesAsync()
