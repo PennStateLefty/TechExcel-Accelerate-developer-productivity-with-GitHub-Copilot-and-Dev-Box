@@ -55,3 +55,9 @@ jobs:
 
     - name: Push Docker image
       run: docker push ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
+
+    - name: Deploy to the Azure Web App (Dev)
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'sllr2wa5ppkoo-dev'
+        images: "sllr2wa5ppkoompnpreg.azurecr.io/techexcel/dotnetcoreapp:${{ env.tag }}"
