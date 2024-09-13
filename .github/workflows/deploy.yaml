@@ -2,7 +2,11 @@ name: Deploy to Azure
 
 on:
     workflow_dispatch:
-
+        inputs:
+            env_name:
+                description: 'Environment to run tests against'
+                required: true
+                type: string
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -16,6 +20,10 @@ jobs:
         steps:
         - name: Checkout repository
           uses: actions/checkout@v3
+
+        - name: Set environment name
+          run: echo "ENVIRONMENT=${{ github.event.inputs.env_name }}" >> $GITHUB_ENV
+          if: ${{ github.event.inputs.env_name != '' }}
 
         - name: Login to Azure
           uses: azure/login@v1
