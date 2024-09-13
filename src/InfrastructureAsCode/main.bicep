@@ -49,6 +49,14 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
                     name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
                     value: 'false'
                 }
+                {
+                    name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+                    value: appInsights.properties.InstrumentationKey
+                }
+                {
+                    name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+                    value: appInsights.properties.ConnectionString
+                }
             ]
             linuxFxVersion: 'DOCKER|${registryName}.azurecr.io/${imageName}:latest'
             alwaysOn: true
